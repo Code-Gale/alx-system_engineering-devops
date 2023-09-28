@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+#This script prints Best school 10times using until loop
+
+x=0
+until [ $x -ge 10 ]
+do
+    echo "Best School"
+    sleep 1
+    x=$((x+1))
+done
