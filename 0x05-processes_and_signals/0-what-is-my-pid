@@ -2,4 +2,4 @@
 #This scirpt displays its own PID
 
 my_pid=$$
-echo "$my_pid"
+echo $my_pid
