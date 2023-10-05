@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+#This scripts shows IPV4 attached IP on a local machine
+ifconfig -a | grep -oP 'inet \K\S+'
