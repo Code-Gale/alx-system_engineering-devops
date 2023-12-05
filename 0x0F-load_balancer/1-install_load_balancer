@@ -1,56 +1,18 @@
 #!/usr/bin/env bash
-# install load balancer
+# Install HAproxy
+sudo apt-get update -y
+sudo apt-get install haproxy -y
 
-echo -e "Updating...\n"
+config="
+frontend codesinger.tech
+	bind *:80
+	default_backend webservers
 
-function install() {
-    command -v "$1" &> /dev/null
+backend webservers
+	balance roundrobin
+	server 149870-web-01 100.25.147.62:80 check
+	server 149870-web-02 54.174.169.156:80 check"
 
-    #shellcheck disable=SC2181
-    if [ $? -ne 0 ]; then
-        echo -e "    Installing: $1\n"
-        sudo apt-get update -y -qq && \
-            sudo apt-get install -y "$1" -qq
-        echo -e "\n"
-    else
-        echo -e "    ${1} is already installed.\n"
-    fi
-}
+echo "$config" >> /etc/haproxy/haproxy.cfg
 
-install haproxy #install haproxy
-
-echo -e "\nInstalling haproxy.\n"
-
-# backup default server config file
-sudo cp /etc/haproxy/haproxy.cfg haproxy_default.backup
-
-server_config=\
-"
-defaults
-	mode http
-	timeout client 15s
-	timeout connect 10s
-	timeout server 15s
-	timeout http-request 10s
-
-frontend tjibbs-tech-frontend
-    bind *:80
-    default_backend tjibbs-tech-backend
-
-backend tjibbs-tech-backend
-    balance roundrobin
-    server web-01 54.160.124.63 check
-    server web-02 54.158.177.163 check
-"
-
-# shellcheck disable=SC2154
-echo "$server_config" | sudo dd status=none of=/etc/haproxy/haproxy.cfg
-
-# enable haproxy to be started by init script
-echo "ENABLED=1" | sudo dd status=none of=/etc/default/haproxy
-
-if [ "$(pgrep -c haproxy)" -le 0 ]; then
-    sudo service haproxy start
-else
-    sudo service haproxy restart
-fi
+sudo service haproxy restart
