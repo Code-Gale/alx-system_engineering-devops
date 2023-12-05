@@ -4,15 +4,15 @@ sudo apt-get update -y
 sudo apt-get install haproxy -y
 
 config="
-frontend codesinger.tech
+frontend front_end
 	bind *:80
-	default_backend webservers
+	default_backend back_end
 
-backend webservers
+backend back_end
 	balance roundrobin
 	server 353898-web-01 54.160.124.63:80 check
 	server 353898-web-02 54.158.177.163:80 check"
-
+    
 echo "$config" >> /etc/haproxy/haproxy.cfg
 
 sudo service haproxy restart
