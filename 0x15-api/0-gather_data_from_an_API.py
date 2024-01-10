@@ -12,7 +12,8 @@ def get_user_info(employee_id):
     if response.status_code == 200:
         return response.json()
     else:
-        raise Exception("Could not get user information for employee ID {}".format(employee_id))
+        raise Exception("Could not get user information for \
+            employee ID {}".format(employee_id))
 
 
 def get_todo_list(employee_id):
@@ -23,7 +24,8 @@ def get_todo_list(employee_id):
     if response.status_code == 200:
         return response.json()
     else:
-        raise Exception("Could not get to-do list for employee ID {}".format(employee_id))
+        raise Exception("Could not get to-do list for \
+            employee ID {}".format(employee_id))
 
 
 def get_completed_tasks(todo_list):
